@@ -1,25 +1,11 @@
-# Running dinner matching and mails
+# Running dinner assignments
 
 This is a single page web app that is supposed to manage
-the running dinner matching for the VISUM Mannheim group.
-It runs completely on the client side and instead of databases
-uses a collection of files for I/O.
-The whole point of this project is to make it somewhat easy
-to use. It's a reasonably complex problem but it shouldn't take
-a masters degree or background in database management + software
-development to solve it.
-
-So there you have it, some software that hopefully enables all of
-you to do that on your own.
-At least as long as you have a csv file with your teams, there's an
-explanation on how that has to look in the Import / Export section.
+the running dinner assignments for the VISUM Mannheim student initiative.
 
 Disclaimer: This piece of software is currently tied to the city of Mannheim
-but easily customizable for other cities by small changes in a small number
-of files.
-
-More disclaimer: It's a work in progress. It works reliably enough but
-probably doesn't stand up to abuse as of now.
+but easily customizable for other cities by small number of minor changes in
+the source code.
 
 # Usage
 
@@ -88,7 +74,7 @@ comments they have.
 So a minimal team csv file could look like this:
 
 `"cook1name","cook1last","cook1mail","cook2name","cook2last","cook2mail","address","phone","comments"
-"anton","archer","anton@mail.com","bob","burger","bob@burger.com","fakestreet 123","123455","vegetarian"`
+"alice","a","alice@mail.com","bob","b","bob@burger.com","fakestreet 123","123455","vegetarian"`
 
 ## Rules
 
@@ -121,13 +107,13 @@ In order to build, type into a terminal:
 
 `$ bash build.sh`
 
-# Things that need improvement
+# Missing
 
 - Automatic distribution of mails
-- Be more fool proof
+- Simpler/more robust interface
 - Make it not necessarily require building (i.e. better way to inject webworker code)
-- Refactoring
+- Cleaning up the source code
 
 # License
 
-This software is distributed under the simplified 2-clause BSD license.
+This software is distributed under the MIT license.
