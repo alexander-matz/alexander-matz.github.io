@@ -111392,7 +111392,7 @@ module.exports = function (css) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-map',{staticStyle:{"height":"83vh"},attrs:{"zoom":_vm.value.zoom,"center":_vm.value.center}},[_c('v-tilelayer',{attrs:{"url":"//{s}.tile.osm.org/{z}/{x}/{y}.png"}}),_vm._v(" "),_vm._l((_vm.teams),function(team){return (_vm.isValid(team))?_c('v-marker',{key:team.mail1,attrs:{"lat-lng":{lat: team.lat, lng: team.lng}}}):_vm._e()})],2)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('v-map',{staticStyle:{"height":"83vh"},attrs:{"zoom":_vm.value.zoom,"center":_vm.value.center}},[_c('v-tilelayer',{attrs:{"url":"http://{s}.tile.osm.org/{z}/{x}/{y}.png"}}),_vm._v(" "),_vm._l((_vm.teams),function(team){return (_vm.isValid(team))?_c('v-marker',{key:team.mail1,attrs:{"lat-lng":{lat: team.lat, lng: team.lng}}}):_vm._e()})],2)}
 var staticRenderFns = []
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
