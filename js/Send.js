@@ -66,6 +66,9 @@ Vue.component('view-send', {
             if (idx !== -1) {
               missing.splice(idx, 1);
             }
+            console.log(`Mail sent to: ${name}`);
+          } else {
+            console.error(`Error trying to send to: ${name}`);
           }
           pending -= 1;
           if (pending  == 0) {
@@ -99,7 +102,7 @@ Vue.component('view-send', {
           this.sender,
           team.mail2,
           this.subject,
-          mail,
+          mailbody,
           { token: this.token,
             callback: handler(team.name2),
           }
@@ -120,7 +123,7 @@ Vue.component('view-send', {
         color: 'error',
         items: [message],
       });
-      console.log(message);
+      console.error(message);
     }
   },
   computed: {

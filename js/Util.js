@@ -1,6 +1,18 @@
 const lowerLeftMA = [49.446, 8.4517];
 const upperRightMA = [49.514, 8.4955];
 
+let Mock = {};
+
+Mock.send = (from, to, subject, body, {token, callback}) => {
+  setTimeout(() => {
+    if (Math.random() >= 0.1) {
+      callback('OK');
+    } else {
+      callback('error');
+    }
+  }, 500 + Math.random() * 1500);
+}
+
 const debounce = (func, wait, to) => {
   if (to.timeout) {
     clearTimeout(to.timeout);
