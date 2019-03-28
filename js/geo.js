@@ -23,17 +23,15 @@ let geo = (function() {
     parseResponse: (response) => {
       return response.json()
         .then((data) => {
-          return new Promise( (resolve, reject) => {
-            if (data.length > 0) {
-              resolve({
-                lat: data[0].lat,
-                lon: data[0].lon,
-              })
-            } else {
-              reject(new Error('not found'));
+          if (data.length > 0) {
+            return {
+              lat: data[0].lat,
+              lon: data[0].lon,
             }
-          });
-        })
+          } else {
+            throw new Error('not found');
+          }
+        });
     }
   };
 
@@ -56,21 +54,15 @@ let geo = (function() {
         redirect: "follow",
         referrer: "no-referrer",
       }, timeout).then( (response) => {
-        return new Promise( (resolve, reject) => {
-          if (response.status == 200) {
-            return nominatim.parseResponse(response)
-              .then((position) => {
-                cache[address] = Object.assign({cached: true}, position);
-                resolve(position);
-              });
-          } else {
-            reject(new Error(response.statusText));
-          }
-        });
-      }).catch( (err) => {
-        return new Promise( (resolve, reject) => {
-          reject(err);
-        })
+        if (response.status == 200) {
+          return nominatim.parseResponse(response)
+            .then((position) => {
+              cache[address] = Object.assign({cached: true}, position);
+              return position;
+            })
+        } else {
+          throw Error(response.statusText);
+        }
       });
   }
 

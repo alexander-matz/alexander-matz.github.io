@@ -1,6 +1,7 @@
 Vue.component('view-teams', {
   data: () => ({
     error: '',
+    resolving: 0,
     page: 1,
   }),
   props: [ 'value', 'snack', 'footer' ],
@@ -25,6 +26,71 @@ Vue.component('view-teams', {
         }
       }
     },
+    resolveSingleAddress () {
+      if (this.value.length == 0) return;
+      const idx = this.page-1;
+      if (idx === null) return;
+
+      const teams = this.value;
+      const team = teams[idx];
+      if (team.address.trim == "") {
+        this.$emit('update:snack', {
+          visible: true,
+          color: 'error',
+          items: ['team does not have an address'],
+        });
+        return;
+      }
+      const scope = this;
+      this.resolving += 1;
+      geo.clear(); // no cache for now
+      geo.code(team.address, 3000).then((coords) => {
+        this.resolving -= 1;
+        const newteam = {...team, coords: `${coords.lat}, ${coords.lon}`};
+        const newteams = [...teams.slice(0, idx), newteam, ...teams.slice(idx+1)];
+        scope.$emit('input', newteams);
+      }).catch((err) => {
+        this.resolving -= 1;
+        console.error(err);
+        scope.$emit('update:snack', {
+          visible: true,
+          color: 'error',
+          items: ['unable to resolve address'],
+        });
+      });
+    },
+    /*
+    resolveAddresses () {
+      this.resolving = true;
+      const scope = this;
+      let newteams = [];
+      const oldteams = this.value;
+
+      for (let i = 0; i < oldteams; ++i) {
+        let team = oldteams[i];
+        newteams.push(team); // default keep old reference
+        if (team.address.trim == "") continue;
+        if (parseCoords(team.coords) === null) continue;
+        let copy = {...team}; // guard against async issues
+        const index = i; // save index
+
+        this.resolving += 1;
+        geo.code(team.address, 3000)
+          .then((coords) => {
+            copy.coords = `${coords.lat}, ${coords.lon}`;
+          }).catch((err) => {
+            console.log(err);
+            this.$emit('update:snack', {
+              visible: true,
+              color: 'error',
+              items: ['error resolving one or more addresses'],
+            });
+          }).finally(() => {
+            scope.resolving -= 1;
+          })
+      }
+    },
+    */
     onImport (text) {
       const {data, errors, meta} = Papa.parse(text, {
         header: true,
@@ -141,6 +207,15 @@ Vue.component('view-teams', {
           Remove
           <v-icon right>delete</v-icon>
         </v-btn>
+
+        <v-tooltip bottom v-if='selectedIdx !== null'>
+          <template v-slot:activator="{ on }">
+            <v-btn @click='resolveSingleAddress' :loading="resolving > 0" v-on="on">
+              Find
+            </v-btn>
+          </template>
+          <span>Try to find this teams address on the map</span>
+        </v-tooltip>
 
         <v-autocomplete
           :items='filterItems'
