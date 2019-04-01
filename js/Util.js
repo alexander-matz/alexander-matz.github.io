@@ -31,7 +31,7 @@ const downloadFile = (filename, contents) => {
   let link = document.createElement('a');
   link.href = href;
   link.download = filename;
-  link.click();
+  link.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));
 }
 
 const randomTeam = () => {
