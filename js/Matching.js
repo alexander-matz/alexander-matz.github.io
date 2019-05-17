@@ -3,6 +3,7 @@ Vue.component('view-matching', {
     busy: false,
     page: 1,
     workers: null,
+    optimizer: 'anneal', // options: anneal, evolve
     start: null,
   }),
   destroyed() {
@@ -45,15 +46,40 @@ Vue.component('view-matching', {
       for (let i = 0; i < 1; ++i) {
         let worker = new Worker('js/worker.js');
         worker.onmessage = this.handleMessage;
-        worker.postMessage({
-          score: this.score,
-          match: this.match,
-          rounds: this.calcRounds(),
-        });
-        this.workers.push(worker);
+        this.tmax = 50000;
+        this.tfactor = 0.9;
+        this.steps = 500;
+        this.kickWorker(worker);
       }
+      console.log(`optimizer: ${this.optimizer}`); 
       this.start = Date.now() / 1000;
       this.busy = true;
+    },
+    kickWorker(worker) {
+      if (this.optimizer == 'anneal') {
+        let T = this.tmax;
+        this.tmax = this.tmax * this.tfactor;
+        worker.postMessage({
+          kind: 'anneal',
+          config: {
+            match: this.match,
+            score: this.score,
+            nsteps: this.steps,
+            T: T,
+          }
+        });
+      } else if (this.optimizer == 'evolve') {
+        worker.postMessage({
+          kind: 'evolve',
+          config: {
+            score: this.score,
+            match: this.match,
+            rounds: this.calcRounds(),
+          }
+        });
+      } else {
+        throw new Error(`invalid optimizer ${this.optimizer}`);
+      }
     },
     stopMatching() {
       if (this.workers != null) {
@@ -73,11 +99,7 @@ Vue.component('view-matching', {
         this.$emit('update:match', match);
       }
       if (this.busy) {
-        event.target.postMessage({
-          score: this.score,
-          match: this.match,
-          rounds: this.calcRounds(),
-        });
+        this.kickWorker(event.target);
       }
     },
     onSearch(index) {
