@@ -171,13 +171,25 @@ Vue.component('view-send', {
   <v-tab-item>
     <v-card-text>
       <v-layout row wrap>
+        <v-flex md12 xs12 pl-1 pt-0>
+          <a href="https://www.smtpjs.com/#useit"
+             title="Click on 'Encrypt your SMTP Credentials'"
+             target="_black" rel="noopener noreferrer">
+            Create a new Token on SmtpJS.com
+          </a>
+        </v-flex>
+
         <v-flex md6 xs12 pa-1>
-          <v-text-field label='SmtpJs Token' v-bind:value='token' @input='$emit("update:token", $event)'>
+          <v-text-field label='SmtpJs Token'
+                        v-bind:value='token'
+                        @input='$emit("update:token", $event)'>
           </v-text-field>
         </v-flex>
         <v-flex md3 xs9 pa-1>
-          <v-text-field label='Test E-Mail' :rules='[email]'
-            v-bind:value='testmail' @input='$emit("update:testmail", $event)'>
+          <v-text-field label='Test E-Mail'
+                        :rules='[email]'
+                        v-bind:value='testmail'
+                        @input='$emit("update:testmail", $event)'>
           </v-text-field>
         </v-flex>
         <v-flex md3 xs3 pa-1>
@@ -185,13 +197,18 @@ Vue.component('view-send', {
             Send Test E-Mail
           </v-btn>
         </v-flex>
+
         <v-flex md6 xs12 pa-1>
-          <v-text-field label='Subject' v-bind:value='subject' @input='$emit("update:subject", $event)'>
+          <v-text-field label='Subject'
+                        v-bind:value='subject'
+                        @input='$emit("update:subject", $event)'>
           </v-text-field>
         </v-flex>
         <v-flex md6 xs12 pa-1>
-          <v-text-field label='Sender Address' :rules='[email]'
-            v-bind:value='sender' @input='$emit("update:sender", $event)'>
+          <v-text-field label='Sender Address'
+                        :rules='[email]'
+                        v-bind:value='sender'
+                        @input='$emit("update:sender", $event)'>
           </v-text-field>
         </v-flex>
         <v-flex xs12 pa-1>
