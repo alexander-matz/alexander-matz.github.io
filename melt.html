@@ -32,8 +32,9 @@
     if (active) {
       const worker = event.target;
       const [a, n, dt] = event.data;
-      // adjust rounds to roughly come out at 500ms per round per thread
-      rounds = n * (500 / dt);
+      // nudge number of rounds towards what's needed for 500ms of work
+      let guess = n * (500 / dt);
+      rounds = rounds * 0.7 + guess * 0.3;
       worker.postMessage([a, rounds])
     }
   }
