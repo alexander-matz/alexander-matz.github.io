@@ -22,7 +22,7 @@
     if (txt.state === undefined) {
       txt.state = 0;
     } else {
-      txt.state = (txt.state + 1) % 1000;
+      txt.state = (txt.state + 1) % 10000;
     }
     return txt.state.toString().padStart(4, '0');
   }
