@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
   const cores = navigator.hardwareConcurrency;
   window.URL = window.URL || window.webkitURL;
@@ -28,15 +29,16 @@
   }
 
   function ondone(event) {
-    document.getElementById("spinner").textContent = txt();
     if (active) {
       const worker = event.target;
       const [a, n, dt] = event.data;
       // nudge number of rounds towards what's needed for 500ms of work
       let guess = n * (500 / dt);
-      rounds = rounds * 0.7 + guess * 0.3;
+      rounds = rounds * 0.8 + guess * 0.2;
       worker.postMessage([a, rounds])
     }
+    document.getElementById("spinner").textContent = txt();
+    document.getElementById("load").textContent = rounds.toExponential(2);
   }
   function melt() {
     active = true;
@@ -65,4 +67,5 @@
   }
 </script>
 <button id="button" onclick="trigger()">melt!</button>
-<div id="spinner"></div>
+<div>Heartbeat: <span id="spinner"></span></div>
+<div>Workload: <span id="load"></span></div>
