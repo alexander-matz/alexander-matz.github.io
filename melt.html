@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<script>
+  const cores = navigator.hardwareConcurrency;
+  window.URL = window.URL || window.webkitURL;
+  const src = `
+    self.onmessage = function(event){
+      let [a, n] = event.data;
+      const start = performance.now();
+      for (let i = 0; i < n; ++i) {
+        // numerical recipe lcg
+        a = (1664525 * a + 1013904223) % (1 << 31);
+      }
+      const stop = performance.now();
+      postMessage([a, n, stop-start]);
+    };
+  `; 
+  let rounds = 1 << 24;
+  let active = false;
+
+  function txt() {
+    if (txt.state === undefined) {
+      txt.state = 0;
+    } else {
+      txt.state = (txt.state + 1) % 1000;
+    }
+    return txt.state.toString().padStart(4, '0');
+  }
+
+  function ondone(event) {
+    document.getElementById("spinner").textContent = txt();
+    if (active) {
+      const worker = event.target;
+      const [a, n, dt] = event.data;
+      // adjust rounds to roughly come out at 500ms per round per thread
+      rounds = n * (500 / dt);
+      worker.postMessage([a, rounds])
+    }
+  }
+  function melt() {
+    active = true;
+    const delay = Math.random() * 1000;
+    for (let i = 0; i < cores; ++i) {
+      let start = i;
+      setTimeout(function(){
+        const worker = new Worker('data:application/javascript,' + encodeURIComponent(src));
+        worker.onmessage = ondone;
+        worker.postMessage([start, rounds]);
+      }, delay);
+    }
+    document.getElementById("spinner").textContent = txt();
+  }
+  function stop() {
+    active = false;
+  }
+  function trigger() {
+    if (!active) {
+      melt();
+      document.getElementById("button").textContent = "stop!";
+    } else {
+      stop();
+      document.getElementById("button").textContent = "melt!";
+    }
+  }
+</script>
+<button id="button" onclick="trigger()">melt!</button>
+<div id="spinner"></div>
