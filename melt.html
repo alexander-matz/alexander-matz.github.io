@@ -16,28 +16,48 @@
       postMessage([a, n, stop-start]);
     };
   `; 
-  let rounds = 1 << 24;
+  let rounds = 1 << 14;
+  let weight = 0.1;
   let active = false;
+
+  function ticks() {
+    if (ticks.arr === undefined) {
+      ticks.arr = [];
+      ticks.ptr = 0;
+    }
+    const oversample = 4;
+    const now = performance.now();
+    ticks.arr[ticks.ptr] = now;
+    ticks.ptr = (ticks.ptr + 1) % (cores * oversample);
+    let min = ticks.arr[0];
+    for (let i = 1; i < ticks.arr.length; ++i) {
+      if (ticks.arr[i] < min) {
+        min = ticks.arr[i];
+      }
+    }
+    return ticks.arr.length / ((now-min)/1000) / cores;
+  }
 
   function txt() {
     if (txt.state === undefined) {
       txt.state = 0;
     } else {
-      txt.state = (txt.state + 1) % 10000;
+      txt.state = (txt.state + 1) % 100;
     }
-    return txt.state.toString().padStart(4, '0');
+    return txt.state.toString().padStart(2, '0');
   }
 
   function ondone(event) {
     if (active) {
       const worker = event.target;
       const [a, n, dt] = event.data;
-      // nudge number of rounds towards what's needed for 500ms of work
-      let guess = n * (500 / dt);
-      rounds = rounds * 0.8 + guess * 0.2;
+      // nudge number of rounds towards what's needed for roughly 1s of work
+      let guess = n * (1000 / (dt > 0 ? dt : 1));
+      rounds = guess * weight + rounds * (1-weight);
       worker.postMessage([a, rounds])
     }
     document.getElementById("spinner").textContent = txt();
+    document.getElementById("ticks").textContent = ticks().toFixed(2);
     document.getElementById("load").textContent = rounds.toExponential(2);
   }
   function melt() {
@@ -68,4 +88,5 @@
 </script>
 <button id="button" onclick="trigger()">melt!</button>
 <div>Heartbeat: <span id="spinner"></span></div>
+<div>Ticks/core/s: <span id="ticks"></span></div>
 <div>Workload: <span id="load"></span></div>
