@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>My Blog</title>
+    <link>https://alexander-matz.github.io/blog/</link>
+    <description>Recent content on My Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 15 May 2023 18:09:59 +0700</lastBuildDate><atom:link href="https://alexander-matz.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Thailand</title>
+      <link>https://alexander-matz.github.io/blog/posts/thailand/</link>
+      <pubDate>Mon, 15 May 2023 18:09:59 +0700</pubDate>
+      
+      <guid>https://alexander-matz.github.io/blog/posts/thailand/</guid>
+      <description>Disclaimer: I&amp;rsquo;m writing this from memory on the last days of my travel, so expected varying levels of detail.
+Mo 2023-04-17 After an uneventful flight, I arrived in Thailand early in the morning. I took the S1 bus to Khao San Road, the busiest place for back packers in all of SE Asia. On the bus I met a fellow solo traveler, Chloe. We grabbed something to eat nearby and &amp;ldquo;massively overpaid&amp;rdquo; (200B ~ 5€ for a soup), it was still delicious though.</description>
+    </item>
+    
+  </channel>
+</rss>
